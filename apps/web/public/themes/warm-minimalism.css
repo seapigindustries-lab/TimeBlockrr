@@ -151,7 +151,7 @@ body {
   font-family: 'Hanken Grotesk', 'Segoe UI', system-ui, sans-serif;
   font-size: 22px;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--clay) 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--brand-clay) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

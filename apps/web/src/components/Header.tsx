@@ -23,7 +23,7 @@ function Header({ onSettingsClick, onThemeClick, onSkinClick }: HeaderProps) {
   return (
     <header className="header">
       <div className="header-brand">
-        <img src="/LogoIon.png" alt="TimeBlockrr" className="header-logo" />
+        <img src="/LogoIon.svg" alt="TimeBlockrr" className="header-logo" />
         <h1 className="header-title">TimeBlockrr</h1>
       </div>
       <div className="header-controls">
