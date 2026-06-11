@@ -80,3 +80,38 @@ export function formatRange(startTime: string, duration: number, use24Hour: bool
   }
   return `${fmt(startDate)} - ${fmt(endDate)}`
 }
+
+export function splitBlockOnDayBoundary(
+  block: { startTime: string; duration: number; dayOfWeek: number },
+  dayStartHour: number = 0,
+  dayEndHour: number = 24
+): Array<{ startTime: string; duration: number; dayOfWeek: number }> {
+  const [startH, startM] = block.startTime.split(':').map(Number)
+  const startMinutes = startH * 60 + startM
+  const endMinutes = startMinutes + block.duration
+  
+  // Check if block fits within the day
+  if (endMinutes <= dayEndHour * 60) {
+    return [block]
+  }
+  
+  // Split the block
+  const firstPartDuration = dayEndHour * 60 - startMinutes
+  const secondPartDuration = block.duration - firstPartDuration
+  const nextDay = (block.dayOfWeek + 1) % 7
+  
+  return [
+    {
+      ...block,
+      duration: firstPartDuration,
+      endTime: calculateEndTime(block.startTime, firstPartDuration)
+    },
+    {
+      ...block,
+      dayOfWeek: nextDay,
+      startTime: `${dayStartHour.toString().padStart(2, '0')}:00`,
+      duration: secondPartDuration,
+      endTime: calculateEndTime(`${dayStartHour.toString().padStart(2, '0')}:00`, secondPartDuration)
+    }
+  ]
+}

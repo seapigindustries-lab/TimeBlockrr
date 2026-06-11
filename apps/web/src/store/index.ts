@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { AppData, Settings, Tag, TimeBlock } from '../types'
 import { defaultSettings, defaultTags } from '../utils/defaults'
+import { splitBlockOnDayBoundary } from '../utils/time'
 
 const STORAGE_KEY = 'timeblockrr-data'
 
@@ -89,61 +90,71 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
 
   addTimeBlock: (block) => {
-    set((state) => ({ timeBlocks: [...state.timeBlocks, block] }))
+    // Split block if it would overflow to next day
+    const blocksToAdd = splitBlockOnDayBoundary(block)
+    set((state) => ({ timeBlocks: [...state.timeBlocks, ...blocksToAdd] }))
     get().saveData()
   },
 
   updateTimeBlock: (id, updates) => {
-    set((state) => ({
-      timeBlocks: state.timeBlocks.map((b) => {
-        if (b.id !== id) return b
-        
-        const newStartTime = updates.startTime ?? b.startTime
-        const newEndTime = updates.endTime ?? b.endTime
-        const newDuration = updates.duration ?? b.duration
-        
-        let calculatedUpdates: Partial<TimeBlock> = {}
-        
-        if (updates.startTime && !updates.endTime && !updates.duration) {
-          const [startH, startM] = newStartTime.split(':').map(Number)
-          const totalStartMinutes = startH * 60 + startM
-          const totalEndMinutes = totalStartMinutes + newDuration
-          const endH = Math.floor(totalEndMinutes / 60) % 24
-          const endM = totalEndMinutes % 60
-          calculatedUpdates.endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`
-        } else if (updates.endTime && !updates.startTime && !updates.duration) {
-          const [startH, startM] = newStartTime.split(':').map(Number)
-          const [endH, endM] = newEndTime.split(':').map(Number)
-          let duration = (endH * 60 + endM) - (startH * 60 + startM)
-          if (duration < 0) duration += 24 * 60
-          calculatedUpdates.duration = duration
-        } else if (updates.duration && !updates.startTime && !updates.endTime) {
-          const [startH, startM] = newStartTime.split(':').map(Number)
-          const totalStartMinutes = startH * 60 + startM
-          const totalEndMinutes = totalStartMinutes + newDuration
-          const endH = Math.floor(totalEndMinutes / 60) % 24
-          const endM = totalEndMinutes % 60
-          calculatedUpdates.endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`
-        } else if ((updates.startTime && updates.endTime) || (updates.startTime && updates.duration) || (updates.endTime && updates.duration)) {
-          const [startH, startM] = newStartTime.split(':').map(Number)
-          const [endH, endM] = newEndTime.split(':').map(Number)
-          let calculatedDuration = (endH * 60 + endM) - (startH * 60 + startM)
-          if (calculatedDuration < 0) calculatedDuration += 24 * 60
+    set((state) => {
+      // First, find the block to update
+      const blockToUpdate = state.timeBlocks.find(b => b.id === id)
+      if (!blockToUpdate) return state
+      
+      // Calculate updated block
+      const newStartTime = updates.startTime ?? blockToUpdate.startTime
+      const newEndTime = updates.endTime ?? blockToUpdate.endTime
+      const newDuration = updates.duration ?? blockToUpdate.duration
+      
+      let calculatedUpdates: Partial<TimeBlock> = {}
+      
+      if (updates.startTime && !updates.endTime && !updates.duration) {
+        const [startH, startM] = newStartTime.split(':').map(Number)
+        const totalStartMinutes = startH * 60 + startM
+        const totalEndMinutes = totalStartMinutes + newDuration
+        const endH = Math.floor(totalEndMinutes / 60) % 24
+        const endM = totalEndMinutes % 60
+        calculatedUpdates.endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`
+      } else if (updates.endTime && !updates.startTime && !updates.duration) {
+        const [startH, startM] = newStartTime.split(':').map(Number)
+        const [endH, endM] = newEndTime.split(':').map(Number)
+        let duration = (endH * 60 + endM) - (startH * 60 + startM)
+        if (duration < 0) duration += 24 * 60
+        calculatedUpdates.duration = duration
+      } else if (updates.duration && !updates.startTime && !updates.endTime) {
+        const [startH, startM] = newStartTime.split(':').map(Number)
+        const totalStartMinutes = startH * 60 + startM
+        const totalEndMinutes = totalStartMinutes + newDuration
+        const endH = Math.floor(totalEndMinutes / 60) % 24
+        const endM = totalEndMinutes % 60
+        calculatedUpdates.endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`
+      } else if ((updates.startTime && updates.endTime) || (updates.startTime && updates.duration) || (updates.endTime && updates.duration)) {
+        const [startH, startM] = newStartTime.split(':').map(Number)
+        const [endH, endM] = newEndTime.split(':').map(Number)
+        let calculatedDuration = (endH * 60 + endM) - (startH * 60 + startM)
+        if (calculatedDuration < 0) calculatedDuration += 24 * 60
           
-          if (updates.duration && (updates.startTime || !updates.endTime)) {
-            const totalStartMinutes = startH * 60 + startM
-            const totalEndMinutes = totalStartMinutes + newDuration
-            const calcEndH = Math.floor(totalEndMinutes / 60) % 24
-            const calcEndM = totalEndMinutes % 60
-            calculatedUpdates.endTime = `${calcEndH.toString().padStart(2, '0')}:${calcEndM.toString().padStart(2, '0')}`
-          } else {
-            calculatedUpdates.duration = calculatedDuration
-          }
+        if (updates.duration && (updates.startTime || !updates.endTime)) {
+          const totalStartMinutes = startH * 60 + startM
+          const totalEndMinutes = totalStartMinutes + newDuration
+          const calcEndH = Math.floor(totalEndMinutes / 60) % 24
+          const calcEndM = totalEndMinutes % 60
+          calculatedUpdates.endTime = `${calcEndH.toString().padStart(2, '0')}:${calcEndM.toString().padStart(2, '0')}`
+        } else {
+          calculatedUpdates.duration = calculatedDuration
         }
-        
-        return { ...b, ...updates, ...calculatedUpdates }
-      })
-    }))
+      }
+      
+      const updatedBlock = { ...blockToUpdate, ...updates, ...calculatedUpdates }
+      
+      // Check if block would overflow and split if necessary
+      const blocksToAdd = splitBlockOnDayBoundary(updatedBlock)
+      
+      // Remove the original block and add the new blocks
+      const filteredBlocks = state.timeBlocks.filter(b => b.id !== id)
+      return { timeBlocks: [...filteredBlocks, ...blocksToAdd] }
+    })
     get().saveData()
   },
 
