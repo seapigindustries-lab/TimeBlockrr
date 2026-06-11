@@ -60,9 +60,6 @@ function DraggableTimeBlock({ block, tag, onEdit: _onEdit, use24Hour, startHour,
         <div className="block-title-bar-left">
           <div className="block-title-text">{block.name || 'Untitled'}</div>
         </div>
-        <div className="block-title-bar-right">
-          <div className="block-title-tag">{tag.name}</div>
-        </div>
       </div>
       <div className="block-content">
         <div className="block-time-row">
@@ -71,6 +68,7 @@ function DraggableTimeBlock({ block, tag, onEdit: _onEdit, use24Hour, startHour,
         </div>
         {block.notes && <div className="block-notes">{block.notes}</div>}
       </div>
+      <div className="block-title-tag">{tag.name}</div>
       <div
         className="block-resizer"
         onMouseDown={(e) => {
@@ -272,7 +270,7 @@ interface TimeGridProps {
 }
 
 function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
-  const { settings, timeBlocks, addTimeBlock, updateTimeBlock, deleteTimeBlock } = useAppStore()
+  const { settings, timeBlocks, addTimeBlock, updateTimeBlock, updateRecurringBlocks, deleteTimeBlock } = useAppStore()
   const setTimeBlocks = useAppStore(state => state.setTimeBlocks)
   const selectedBlockId = useAppStore(state => state.selectedBlockId)
   const setSelectedBlockId = useAppStore(state => state.setSelectedBlockId)
@@ -568,11 +566,11 @@ function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
     setDragCreate({ isActive: false, dayIndex: null, startY: null, currentY: null })
   }
 
-  const handleUpdateBlock = () => {
+  const handleUpdateBlock = (updateAll: boolean = false) => {
     if (!editingBlock) return
     // Ensure endTime is set before saving
     const finalEndTime = editingBlock.endTime || calculateEndTime(editingBlock.startTime, editingBlock.duration)
-    updateTimeBlock(editingBlock.id, {
+    const updates = {
       name: editingBlock.name,
       tagId: editingBlock.tagId,
       dayOfWeek: editingBlock.dayOfWeek,
@@ -580,7 +578,15 @@ function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
       endTime: finalEndTime,
       duration: editingBlock.duration,
       notes: editingBlock.notes
-    })
+    }
+    
+    if (updateAll && editingBlock.parentId) {
+      // Update all occurrences of this recurring event
+      updateRecurringBlocks(editingBlock.parentId, updates)
+    } else {
+      // Update just this single block
+      updateTimeBlock(editingBlock.id, updates)
+    }
     setEditingBlock(null)
   }
 
@@ -955,7 +961,22 @@ function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
                 Delete
               </button>
               <button className="btn btn-secondary" onClick={() => setEditingBlock(null)}>Cancel</button>
-              <button className="btn btn-primary" onClick={handleUpdateBlock}>Save</button>
+              {editingBlock.parentId ? (
+                // Recurring event - show both options
+                <>
+                  <button className="btn btn-secondary" onClick={() => handleUpdateBlock(false)}>
+                    Save This Event
+                  </button>
+                  <button className="btn btn-primary" onClick={() => handleUpdateBlock(true)}>
+                    Save All Events
+                  </button>
+                </>
+              ) : (
+                // Single event - just save
+                <button className="btn btn-primary" onClick={() => handleUpdateBlock(false)}>
+                  Save
+                </button>
+              )}
             </div>
           </div>
         </div>

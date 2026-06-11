@@ -17,6 +17,7 @@ interface AppStore extends AppData {
   setTimeBlocks: (blocks: TimeBlock[]) => void
   addTimeBlock: (block: TimeBlock) => void
   updateTimeBlock: (id: string, updates: Partial<TimeBlock>) => void
+  updateRecurringBlocks: (parentId: string, updates: Partial<TimeBlock>) => void
   deleteTimeBlock: (id: string) => void
   setHasCompletedSetup: (value: boolean) => void
   loadData: () => Promise<void>
@@ -148,6 +149,61 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   deleteTimeBlock: (id) => {
     set((state) => ({ timeBlocks: state.timeBlocks.filter((b) => b.id !== id) }))
+    get().saveData()
+  },
+
+  updateRecurringBlocks: (parentId, updates) => {
+    set((state) => ({
+      timeBlocks: state.timeBlocks.map((b) => {
+        // Update the original block or any instance with matching parentId
+        if (b.id !== parentId && b.parentId !== parentId) return b
+        
+        const newStartTime = updates.startTime ?? b.startTime
+        const newEndTime = updates.endTime ?? b.endTime
+        const newDuration = updates.duration ?? b.duration
+        
+        let calculatedUpdates: Partial<TimeBlock> = {}
+        
+        if (updates.startTime && !updates.endTime && !updates.duration) {
+          const [startH, startM] = newStartTime.split(':').map(Number)
+          const totalStartMinutes = startH * 60 + startM
+          const totalEndMinutes = totalStartMinutes + newDuration
+          const endH = Math.floor(totalEndMinutes / 60) % 24
+          const endM = totalEndMinutes % 60
+          calculatedUpdates.endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`
+        } else if (updates.endTime && !updates.startTime && !updates.duration) {
+          const [startH, startM] = newStartTime.split(':').map(Number)
+          const [endH, endM] = newEndTime.split(':').map(Number)
+          let duration = (endH * 60 + endM) - (startH * 60 + startM)
+          if (duration < 0) duration += 24 * 60
+          calculatedUpdates.duration = duration
+        } else if (updates.duration && !updates.startTime && !updates.endTime) {
+          const [startH, startM] = newStartTime.split(':').map(Number)
+          const totalStartMinutes = startH * 60 + startM
+          const totalEndMinutes = totalStartMinutes + newDuration
+          const endH = Math.floor(totalEndMinutes / 60) % 24
+          const endM = totalEndMinutes % 60
+          calculatedUpdates.endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`
+        } else if ((updates.startTime && updates.endTime) || (updates.startTime && updates.duration) || (updates.endTime && updates.duration)) {
+          const [startH, startM] = newStartTime.split(':').map(Number)
+          const [endH, endM] = newEndTime.split(':').map(Number)
+          let calculatedDuration = (endH * 60 + endM) - (startH * 60 + startM)
+          if (calculatedDuration < 0) calculatedDuration += 24 * 60
+          
+          if (updates.duration && (updates.startTime || !updates.endTime)) {
+            const totalStartMinutes = startH * 60 + startM
+            const totalEndMinutes = totalStartMinutes + newDuration
+            const calcEndH = Math.floor(totalEndMinutes / 60) % 24
+            const calcEndM = totalEndMinutes % 60
+            calculatedUpdates.endTime = `${calcEndH.toString().padStart(2, '0')}:${calcEndM.toString().padStart(2, '0')}`
+          } else {
+            calculatedUpdates.duration = calculatedDuration
+          }
+        }
+        
+        return { ...b, ...updates, ...calculatedUpdates }
+      })
+    }))
     get().saveData()
   },
 
