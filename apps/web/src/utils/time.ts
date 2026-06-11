@@ -1,5 +1,3 @@
-import type { Tag } from '../types'
-
 export function calculateEndTime(startTime: string, duration: number): string {
   const [startH, startM] = startTime.split(':').map(Number)
   const totalMinutes = startH * 60 + startM + duration
@@ -41,7 +39,6 @@ export function formatTimeRange(startTime: string, duration: number, use24Hour: 
   const startDate = new Date()
   startDate.setHours(hours, minutes, 0, 0)
   const endDate = new Date(startDate.getTime() + duration * 60000)
-  const formatStr = use24Hour ? 'HH:mm' : 'h:mm a'
   // Use native formatter to avoid date-fns dependency in utils
   const fmt = (d: Date) => {
     if (use24Hour) {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useAppStore } from './store'
-import { getTheme } from './themes'
 import SetupWizard from './components/SetupWizard'
 import Header from './components/Header'
 import TimeGrid from './components/TimeGrid'
@@ -11,7 +10,6 @@ function App() {
   const { settings, hasCompletedSetup, isLoading, loadData, setSettings } = useAppStore()
   const [showSettings, setShowSettings] = useState(false)
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null)
-  const theme = getTheme(settings.theme)
 
   // Dynamic skin CSS loading via link tag
   useEffect(() => {

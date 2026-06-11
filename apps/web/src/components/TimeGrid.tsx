@@ -1,14 +1,14 @@
-import { useState, useMemo, useCallback, useEffect } from 'react'
-import { DndContext, DragEndEvent, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core'
+import { useState, useMemo, useEffect } from 'react'
+import { DndContext, DragEndEvent, useDraggable, useDroppable } from '@dnd-kit/core'
 import { useAppStore } from '../store'
 import { format, addWeeks, startOfWeek, addDays, isSameDay } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid'
-import type { TimeBlock, RecurrenceType, RecurrenceRule } from '../types'
+import type { TimeBlock, RecurrenceType, RecurrenceRule, Tag } from '../types'
 import { formatTime, formatTimeRange, formatDuration, calculateEndTime, calculateDuration } from '../utils/time'
 
 interface TimeBlockProps {
   block: TimeBlock
-  tag: ReturnType<typeof useAppStore>['tags'][0]
+  tag: Tag
   onEdit: (block: TimeBlock) => void
   use24Hour: boolean
   startHour: number
@@ -24,7 +24,7 @@ function minutesFromStart(startTime: string, startHour: number) {
   return Math.max(0, h * 60 + m - startHour * 60)
 }
 
-function DraggableTimeBlock({ block, tag, onEdit, use24Hour, startHour, isSelected, onSelect, onResizeStart, width, left }: TimeBlockProps) {
+function DraggableTimeBlock({ block, tag, onEdit: _onEdit, use24Hour, startHour, isSelected, onSelect, onResizeStart, width, left }: TimeBlockProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: block.id,
     data: block

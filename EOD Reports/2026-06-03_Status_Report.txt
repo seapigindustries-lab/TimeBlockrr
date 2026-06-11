@@ -1,0 +1,109 @@
+================================================================================
+                     TIMEBLOCKRR - END OF DAY REPORT
+================================================================================
+                            2026-06-03
+================================================================================
+
+COMPLETION: ~30%
+- Repo & infrastructure: 100%
+- TypeScript compilation: 100%
+- Test suite: 80% (setup done, basic tests written, more coverage needed)
+- Assets/visual polish: 50% (missing LogoIon.png, favicon)
+- Backend/server: 10% (placeholder only)
+- Frontend features: 90% (all core features present)
+
+================================================================================
+WHAT WAS ACCOMPLISHED TODAY
+================================================================================
+
+- Initialized git repo, created .gitignore, and pushed initial commit to
+  GitHub (seapigindustries-lab/TimeBlockrr)
+- Fixed 11 TypeScript errors across 6 files — code now compiles cleanly
+- Set up Vitest + @testing-library/react + jsdom for the web app
+- Wrote 8 initial smoke tests for time utilities, all passing
+- Added root-level `npm run test` script that delegates to the web workspace
+- Verified dev server starts successfully on localhost:5173
+- Assessed localStorage-to-backend migration path (async loadData/saveData
+  already in place, good foundation)
+
+================================================================================
+CURRENT PHASE
+================================================================================
+
+Stabilization & trust-building — the project scaffold is in place, compiles,
+has basic tests, and runs. Next work should fill remaining gaps (missing
+assets, more test coverage) and make a second commit.
+
+================================================================================
+DECISIONS LOG
+================================================================================
+
+- Decision: Committed as 'master' (not 'main') because that was the local
+  branch name. No strong reason to rename.
+- Decision: Used Vitest over Jest because the project already uses Vite —
+  Vitest is the natural fit, shares config, and is faster.
+- Decision: Skipped major backend work for now — the user wants to stabilize
+  what exists before adding new architecture. Backend migration is deferred.
+- Decision: Fixed TS errors instead of adding tsignore — the errors were
+  genuine (unused variables, wrong types) and easy to fix properly.
+
+================================================================================
+FILES TOUCHED
+================================================================================
+
+- Created: .gitignore — standard Node/TS ignores (node_modules, dist, .env)
+- Created: apps/web/src/test/setup.ts — Vitest setup importing jest-dom matchers
+- Created: apps/web/src/test/time.test.ts — 8 tests for time utility functions
+- Created: EOD Reports/2026-06-03_Status_Report.txt — this file
+- Modified: apps/web/package.json — added "test" and "test:watch" scripts
+- Modified: apps/web/src/App.tsx — removed unused `theme` variable + getTheme import
+- Modified: apps/web/src/components/StatsPanel.tsx — removed unused `index`, `weekStart`, `now`
+- Modified: apps/web/src/components/TimeGrid.tsx — removed unused imports
+  (useCallback, DragOverlay), fixed Tag type, prefixed unused onEdit param
+- Modified: apps/web/src/themes/index.ts — fixed getTheme return type to allow
+  dark/business themes
+- Modified: apps/web/src/utils/time.ts — removed unused `Tag` import and `formatStr`
+  variable
+- Modified: apps/web/vite.config.ts — added Vitest config (globals, jsdom, setup)
+- Modified: package-lock.json — dependency changes from npm install
+- Modified: package.json — added root "test" script
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+PRIORITY:
+1. Commit the current changes (TypeScript fixes, test setup, vitest config)
+2. Add missing public assets (logo.svg favicon, LogoIon.png header logo)
+3. Write more tests for store, components
+
+POSSIBLE IMPROVEMENTS:
+- Add a GitHub Actions CI workflow to run typecheck + tests on push
+- The warm-minimalism CSS references `--clay` in the header-title gradient
+  which isn't defined as a CSS variable — cosmetic, works via fallback
+
+================================================================================
+KNOWN ISSUES / BUGS
+================================================================================
+
+1. Missing /logo.svg — index.html references it as favicon, 404 in browser
+   (non-blocking)
+2. Missing /LogoIon.png — Header.tsx uses it as the logo image, broken image
+   shown (non-blocking, cosmetic)
+3. warm-minimalism CSS: .header-title gradient uses --clay which isn't a CSS
+   custom property — the gradient will still render, color may be off
+4. No CI pipeline configured yet
+
+================================================================================
+CONTINUATION PROMPT
+================================================================================
+TimeBlockrr monorepo is scaffolded, compiles cleanly, has Vitest test suite
+with 8 passing tests in apps/web/src/test/, and dev server runs on :5173.
+The previous session fixed all TypeScript errors, set up testing infra, and
+pushed the initial scaffold commit. Two missing public assets (logo.svg
+favicon, LogoIon.png header logo) should be created. The priority for the
+next session is to commit the staged TypeScript/test changes, then either
+create the missing assets or add more test coverage.
+================================================================================
+END OF REPORT
+================================================================================

@@ -51,7 +51,7 @@ export const businessTheme = {
 
 export type Theme = typeof lightTheme
 
-export const getTheme = (themeName: 'light' | 'dark' | 'business'): Theme => {
+export const getTheme = (themeName: 'light' | 'dark' | 'business'): typeof lightTheme | typeof darkTheme | typeof businessTheme => {
   switch (themeName) {
     case 'dark':
       return darkTheme

@@ -13,6 +13,7 @@
     "build:web": "npm run build -w apps/web",
     "build:server": "npm run build -w server",
     "typecheck": "npm run typecheck -w apps/web",
+    "test": "npm run test -w apps/web",
     "clean": "npm run clean -ws --if-present"
   },
   "devDependencies": {

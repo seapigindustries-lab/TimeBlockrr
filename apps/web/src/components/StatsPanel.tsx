@@ -19,7 +19,7 @@ function PieChart({ data, size = 80, showLabels = false }: PieChartProps) {
   const center = radius
   const labelRadius = radius * 1.35 // Position labels outside the pie
 
-  const segments = data.map((item, index) => {
+  const segments = data.map((item, _index) => {
     const angle = (item.hours / total) * 360
     const startAngle = currentAngle
     const endAngle = currentAngle + angle
@@ -249,8 +249,6 @@ function StatsPanel({ selectedDayIndex, onDaySelect }: StatsPanelProps) {
 
   // Daily tag stats - breakdown by day
   const dailyTagStats = useMemo(() => {
-    const now = new Date()
-    const weekStart = startOfWeek(now, { weekStartsOn: settings.weekStartsOnSunday ? 0 : 1 })
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     
     const dayStats = days.map((dayName, dayIndex) => {
