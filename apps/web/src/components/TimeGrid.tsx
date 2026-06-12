@@ -946,6 +946,28 @@ function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
                 onChange={e => setEditingBlock({ ...editingBlock, notes: e.target.value })}
               />
             </div>
+            {/* Recurrence Section */}
+            <div className="form-group">
+              <label className="form-label">Repeat</label>
+              <select
+                className="form-select"
+                value={editingBlock.recurrence?.type || 'none'}
+                onChange={e => setEditingBlock({ 
+                  ...editingBlock, 
+                  recurrence: { type: e.target.value as RecurrenceType }
+                })}
+              >
+                <option value="none">Does not repeat</option>
+                <option value="daily">Daily</option>
+                <option value="weekdays">Every weekday (Mon-Fri)</option>
+                <option value="weekends">Weekends (Sat-Sun)</option>
+                <option value="weekly">Weekly on {weekDays[editingBlock.dayOfWeek] ? format(weekDays[editingBlock.dayOfWeek], 'EEEE') : 'this day'}</option>
+                <option value="biweekly">Every other week</option>
+                <option value="monthly">Monthly on this date</option>
+                <option value="monthly-weekday">Monthly on the {Math.floor(editingBlock.dayOfWeek / 7) + 1}{['st', 'nd', 'rd', 'th'][Math.floor(editingBlock.dayOfWeek / 7)] || 'th'} {weekDays[editingBlock.dayOfWeek] ? format(weekDays[editingBlock.dayOfWeek], 'EEEE') : 'day'}</option>
+                <option value="yearly">Annually on this date</option>
+              </select>
+            </div>
             <div className="modal-actions">
               <button 
                 className="btn btn-danger" 

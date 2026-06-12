@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect } from 'react'
 import { useAppStore } from '../store'
 import { isSameDay, startOfWeek, isWithinInterval, addDays, format } from 'date-fns'
 import { calculateEndTime, calculateDuration, formatRange } from '../utils/time'
+import type { RecurrenceType } from '../types'
 
 // Pie Chart Component
 interface PieChartProps {
@@ -376,6 +377,28 @@ function StatsPanel({ selectedDayIndex, onDaySelect }: StatsPanelProps) {
                 onChange={(e) => setEditDraft({ ...editDraft, notes: e.target.value })}
               />
             </div>
+            {/* Recurrence Section */}
+            <div className="form-group">
+              <label className="form-label">Repeat</label>
+              <select
+                className="form-select"
+                value={editDraft.recurrence?.type || 'none'}
+                onChange={(e) => setEditDraft({ 
+                  ...editDraft, 
+                  recurrence: { type: e.target.value as RecurrenceType }
+                })}
+              >
+                <option value="none">Does not repeat</option>
+                <option value="daily">Daily</option>
+                <option value="weekdays">Every weekday (Mon-Fri)</option>
+                <option value="weekends">Weekends (Sat-Sun)</option>
+                <option value="weekly">Weekly on {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][editDraft.dayOfWeek]}</option>
+                <option value="biweekly">Every other week</option>
+                <option value="monthly">Monthly on this date</option>
+                <option value="monthly-weekday">Monthly on the {Math.floor(editDraft.dayOfWeek / 7) + 1}{['st', 'nd', 'rd', 'th'][Math.floor(editDraft.dayOfWeek / 7)] || 'th'} {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][editDraft.dayOfWeek]}</option>
+                <option value="yearly">Annually on this date</option>
+              </select>
+            </div>
             <div className="modal-actions" style={{ padding: 0 }}>
               <button
                 className="btn btn-primary"
@@ -384,10 +407,12 @@ function StatsPanel({ selectedDayIndex, onDaySelect }: StatsPanelProps) {
                   updateTimeBlock(editDraft.id, {
                     name: editDraft.name,
                     tagId: editDraft.tagId,
+                    dayOfWeek: editDraft.dayOfWeek,
                     startTime: editDraft.startTime,
                     endTime: finalEndTime,
                     duration: editDraft.duration,
-                    notes: editDraft.notes
+                    notes: editDraft.notes,
+                    recurrence: editDraft.recurrence
                   })
                 }}
               >
