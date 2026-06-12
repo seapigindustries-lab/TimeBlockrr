@@ -183,22 +183,16 @@ function StatsPanel({ selectedDayIndex, onDaySelect }: StatsPanelProps) {
   }, [selectedBlock])
 
   const currentWeekBlocks = useMemo(() => {
-    const now = new Date()
-    const weekStart = startOfWeek(now, { weekStartsOn: settings.weekStartsOnSunday ? 0 : 1 })
-    const weekEnd = addDays(weekStart, 6)
-    return timeBlocks.filter(block => {
-      const blockDate = addDays(weekStart, block.dayOfWeek)
-      return isWithinInterval(blockDate, { start: weekStart, end: weekEnd }) || isSameDay(blockDate, now)
-    })
-  }, [timeBlocks, settings.weekStartsOnSunday])
+    // Filter blocks to only include those from the current week (weekOffset === 0)
+    return timeBlocks.filter(block => block.weekOffset === 0)
+  }, [timeBlocks])
 
   const todayBlocks = useMemo(() => {
     const today = new Date()
-    return timeBlocks.filter(block => {
-      const blockDate = addDays(startOfWeek(today, { weekStartsOn: settings.weekStartsOnSunday ? 0 : 1 }), block.dayOfWeek)
-      return isSameDay(blockDate, today)
-    })
-  }, [timeBlocks, settings.weekStartsOnSunday])
+    const todayDayOfWeek = today.getDay()
+    // Filter blocks for today: weekOffset === 0 and dayOfWeek matches today
+    return timeBlocks.filter(block => block.weekOffset === 0 && block.dayOfWeek === todayDayOfWeek)
+  }, [timeBlocks])
 
   const todayHours = useMemo(() => {
     return todayBlocks.reduce((sum, block) => sum + block.duration / 60, 0)
