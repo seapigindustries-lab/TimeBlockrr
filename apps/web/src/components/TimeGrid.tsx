@@ -24,7 +24,7 @@ function minutesFromStart(startTime: string, startHour: number) {
   return Math.max(0, h * 60 + m - startHour * 60)
 }
 
-function DraggableTimeBlock({ block, tag, onEdit: _onEdit, use24Hour, startHour, isSelected, onSelect, onResizeStart, width, left }: TimeBlockProps) {
+function DraggableTimeBlock({ block, tag, onEdit, use24Hour, startHour, isSelected, onSelect, onResizeStart, width, left }: TimeBlockProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: block.id,
     data: block
@@ -41,6 +41,11 @@ function DraggableTimeBlock({ block, tag, onEdit: _onEdit, use24Hour, startHour,
     return `pattern-${charCode}`
   }
 
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onEdit(block)
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -55,6 +60,7 @@ function DraggableTimeBlock({ block, tag, onEdit: _onEdit, use24Hour, startHour,
         left: left
       }}
       onClick={() => onSelect(block.id)}
+      onDoubleClick={handleDoubleClick}
     >
       <div className="block-title-bar" {...listeners} {...attributes}>
         <div className="block-title-bar-left">
