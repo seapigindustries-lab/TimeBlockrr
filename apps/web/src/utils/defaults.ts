@@ -13,12 +13,12 @@ export const defaultSettings: Settings = {
 }
 
 export const defaultTags: Tag[] = [
-  { id: '1', name: 'Work', color: '#4A90D9', isBuffer: false },
-  { id: '2', name: 'Sleep', color: '#5CB85C', isBuffer: false },
-  { id: '3', name: 'Exercise', color: '#9B7FD9', isBuffer: false },
-  { id: '4', name: 'Meals', color: '#F0AD4E', isBuffer: false },
-  { id: '5', name: 'Personal', color: '#D9534F', isBuffer: false },
-  { id: '6', name: 'Commute', color: '#6B6B6B', isBuffer: false }
+  { id: '1', name: 'Work', color: '#2D3A4A', isBuffer: false },
+  { id: '2', name: 'Sleep', color: '#4A5568', isBuffer: false },
+  { id: '3', name: 'Exercise', color: '#5C8A4D', isBuffer: false },
+  { id: '4', name: 'Meals', color: '#B8860B', isBuffer: false },
+  { id: '5', name: 'Personal', color: '#B85450', isBuffer: false },
+  { id: '6', name: 'Commute', color: '#6B5F52', isBuffer: false }
 ]
 
 export const defaultPalettes: Record<string, string[]> = {

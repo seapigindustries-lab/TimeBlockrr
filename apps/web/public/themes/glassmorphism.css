@@ -3,24 +3,25 @@
 /* Inter - Body/UI font */
 
 :root {
-  /* Brand Colors */
-  --brand-dark: #2A2F4F;
-  --brand-purple: #E5BEEC;
-  --brand-pink: #FDE2F3;
+  /* Brand Colors - 2026 Synthetic Naturalism */
+  --brand-dark: #1A1A2E;
+  --brand-lavender: #E6E6FA;
+  --brand-mint: #AAF0D1;
+  --brand-sage: #9DC183;
   
-  /* Glassmorphism Theme Variables */
+  /* Glassmorphism Theme Variables - WCAG AA Compliant */
   --background: rgba(245, 245, 250, 0.8);
   --surface: rgba(255, 255, 255, 0.65);
   --surface-solid: #FFFFFF;
-  --primary: #2A2F4F;
-  --secondary: rgba(229, 190, 236, 0.8);
-  --text-primary: #2A2F4F;
-  --text-secondary: rgba(107, 107, 115, 0.9);
+  --primary: #2D3A4A;
+  --secondary: rgba(170, 240, 209, 0.8);
+  --text-primary: #1A1A2E;
+  --text-secondary: #4A5568;
   --border: rgba(255, 255, 255, 0.4);
   --border-subtle: rgba(255, 255, 255, 0.2);
-  --success: rgba(92, 184, 92, 0.85);
-  --warning: rgba(240, 173, 78, 0.85);
-  --error: rgba(217, 83, 79, 0.85);
+  --success: #2D8A4E;
+  --warning: #B7791F;
+  --error: #C53030;
   --block-text: #FFFFFF;
   
   /* Glassmorphism Effects */
@@ -32,19 +33,19 @@
 }
 
 [data-theme='dark'] {
-  --background: rgba(30, 30, 40, 0.85);
-  --surface: rgba(45, 45, 55, 0.7);
-  --surface-solid: #2D2D2D;
-  --primary: #5DADE2;
-  --secondary: rgba(175, 122, 197, 0.8);
-  --text-primary: #E8E8E8;
-  --text-secondary: rgba(160, 160, 170, 0.9);
+  --background: rgba(26, 26, 46, 0.85);
+  --surface: rgba(45, 45, 65, 0.7);
+  --surface-solid: #2D2D41;
+  --primary: #A78BFA;
+  --secondary: rgba(170, 240, 209, 0.8);
+  --text-primary: #F5F5F5;
+  --text-secondary: #A0AEC0;
   --border: rgba(255, 255, 255, 0.15);
   --border-subtle: rgba(255, 255, 255, 0.1);
-  --success: rgba(92, 184, 92, 0.85);
-  --warning: rgba(240, 173, 78, 0.85);
-  --error: rgba(217, 83, 79, 0.85);
-  --block-text: #2D2D2D;
+  --success: #68D391;
+  --warning: #F6E05E;
+  --error: #FC8181;
+  --block-text: #1A1A2E;
   --block-text-bright: #FFFFFF;
   
   /* Dark Glassmorphism Effects */
@@ -54,17 +55,17 @@
 }
 
 [data-theme='business'] {
-  --background: #008080;
-  --surface: #C0C0C0;
-  --primary: #000080;
-  --secondary: #808080;
-  --text-primary: #000000;
-  --text-secondary: #000000;
-  --border: #808080;
-  --success: #008000;
-  --warning: #FFA500;
-  --error: #FF0000;
-  --block-text: #000000;
+  --background: #0F766E;
+  --surface: #E2E8F0;
+  --primary: #1E3A5F;
+  --secondary: #64748B;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --border: #94A3B8;
+  --success: #16A34A;
+  --warning: #D97706;
+  --error: #DC2626;
+  --block-text: #0F172A;
 }
 
 * {

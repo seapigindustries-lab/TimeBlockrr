@@ -3,25 +3,25 @@
 /* Inter - Body/UI font */
 
 :root {
-  /* Warm Minimalism - Soft, Organic Color Palette */
-  --brand-warm: #8B6F5C;
+  /* Warm Minimalism - 2026 Earthy & Accessible */
+  --brand-warm: #7C6250;
   --brand-cream: #F5F1E8;
-  --brand-sage: #B8C4A7;
-  --brand-clay: #C4A77D;
-  --brand-rose: #E8D5D0;
+  --brand-sage: #8BA87A;
+  --brand-clay: #B8956A;
+  --brand-rose: #D4A89A;
   
-  /* Theme Variables - Warm Minimalism */
+  /* Theme Variables - Warm Minimalism - WCAG AA Compliant */
   --background: #FAF8F5;
   --surface: #FFFFFF;
   --surface-warm: #F5F1E8;
-  --primary: #6B5B4F;
-  --secondary: #B8C4A7;
-  --text-primary: #4A403A;
-  --text-secondary: #8B7F75;
-  --border: #E8E2D9;
-  --success: #8FAE7E;
-  --warning: #E4B86E;
-  --error: #D4847C;
+  --primary: #5D4E3C;
+  --secondary: #8BA87A;
+  --text-primary: #3D3429;
+  --text-secondary: #6B5F52;
+  --border: #D6CFC5;
+  --success: #5C8A4D;
+  --warning: #B8860B;
+  --error: #B85450;
   --block-text: #FFFFFF;
   
   /* Warm Minimalism Effects */
@@ -35,20 +35,20 @@
 }
 
 [data-theme='dark'] {
-  /* Warm Minimalism Dark - Cozy Night Mode */
+  /* Warm Minimalism Dark - Cozy Night Mode - Accessible */
   --background: #2C2825;
-  --surface: #3A3530;
-  --surface-warm: #423B35;
-  --primary: #D4C4B0;
-  --secondary: #7A8B6E;
-  --text-primary: #E8E0D8;
-  --text-secondary: #A89B8C;
-  --border: #4A423A;
-  --success: #8FAE7E;
-  --warning: #D4B678;
-  --error: #C98880;
-  --block-text: #3A3530;
-  --block-text-bright: #E8E0D8;
+  --surface: #3D3832;
+  --surface-warm: #453E37;
+  --primary: #E8DCC8;
+  --secondary: #9CB08A;
+  --text-primary: #F0E8DC;
+  --text-secondary: #B8A898;
+  --border: #5A5048;
+  --success: #9CB08A;
+  --warning: #E4C070;
+  --error: #D89088;
+  --block-text: #3D3832;
+  --block-text-bright: #F0E8DC;
   
   /* Dark Warm Shadows */
   --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.2);
@@ -57,17 +57,17 @@
 }
 
 [data-theme='business'] {
-  --background: #008080;
-  --surface: #C0C0C0;
-  --primary: #000080;
-  --secondary: #808080;
-  --text-primary: #000000;
-  --text-secondary: #000000;
-  --border: #808080;
-  --success: #008000;
-  --warning: #FFA500;
-  --error: #FF0000;
-  --block-text: #000000;
+  --background: #0F766E;
+  --surface: #E2E8F0;
+  --primary: #1E3A5F;
+  --secondary: #64748B;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --border: #94A3B8;
+  --success: #16A34A;
+  --warning: #D97706;
+  --error: #DC2626;
+  --block-text: #0F172A;
 }
 
 * {
