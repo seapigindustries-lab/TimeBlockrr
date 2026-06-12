@@ -605,9 +605,21 @@ function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
           Week of {format(weekStart, 'MMM d')} - {format(addDays(weekStart, 6), 'MMM d, yyyy')}
         </h2>
         <div className="week-nav-controls">
-          <button className="nav-btn" onClick={() => setCurrentWeekOffset(prev => prev - 1)}>←</button>
+          <button 
+            className="nav-btn" 
+            onClick={() => setCurrentWeekOffset(prev => prev - 1)}
+            disabled={currentWeekOffset <= -4}
+          >
+            ←
+          </button>
           <button className="nav-btn today-btn" onClick={() => setCurrentWeekOffset(0)}>Today</button>
-          <button className="nav-btn" onClick={() => setCurrentWeekOffset(prev => prev + 1)}>→</button>
+          <button 
+            className="nav-btn" 
+            onClick={() => setCurrentWeekOffset(prev => prev + 1)}
+            disabled={currentWeekOffset >= 8}
+          >
+            →
+          </button>
           <button className="week-toggle" onClick={() => {
             useAppStore.getState().setSettings({ weekStartsOnSunday: !settings.weekStartsOnSunday })
           }}>
