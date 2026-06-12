@@ -850,6 +850,7 @@ function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
         <div className="modal-overlay" onClick={() => setEditingBlock(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <h3 className="modal-title">Edit Time Block</h3>
+            {/* Check if this block is part of a recurring series */}
             <div className="form-group">
               <label className="form-label">Name</label>
               <input
@@ -871,28 +872,17 @@ function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
                 ))}
               </select>
             </div>
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Day</label>
-                <select
-                  className="form-select"
-                  value={editingBlock.dayOfWeek}
-                  onChange={e => setEditingBlock({ ...editingBlock, dayOfWeek: parseInt(e.target.value) })}
-                >
-                  {weekDays.map((day, i) => (
-                    <option key={i} value={i}>{format(day, 'EEEE, MMM d')}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Start Time</label>
-                <input
-                  type="time"
-                  className="form-input"
-                  value={editingBlock.startTime}
-                  onChange={e => setEditingBlock({ ...editingBlock, startTime: e.target.value })}
-                />
-              </div>
+            <div className="form-group">
+              <label className="form-label">Day</label>
+              <select
+                className="form-select"
+                value={editingBlock.dayOfWeek}
+                onChange={e => setEditingBlock({ ...editingBlock, dayOfWeek: parseInt(e.target.value) })}
+              >
+                {weekDays.map((day, i) => (
+                  <option key={i} value={i}>{format(day, 'EEEE, MMM d')}</option>
+                ))}
+              </select>
             </div>
             {/* Time Fields - All Three */}
             <div className="form-row time-fields-row">
@@ -961,7 +951,7 @@ function TimeGrid({ selectedDayIndex, onDaySelect }: TimeGridProps) {
                 Delete
               </button>
               <button className="btn btn-secondary" onClick={() => setEditingBlock(null)}>Cancel</button>
-              {editingBlock.parentId ? (
+              {(editingBlock.parentId || timeBlocks.some(b => b.parentId === editingBlock.id)) ? (
                 // Recurring event - show both options
                 <>
                   <button className="btn btn-secondary" onClick={() => handleUpdateBlock(false)}>

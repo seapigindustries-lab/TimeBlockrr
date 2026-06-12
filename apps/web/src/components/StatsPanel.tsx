@@ -311,7 +311,18 @@ function StatsPanel({ selectedDayIndex, onDaySelect }: StatsPanelProps) {
                 {tags.find(t => t.id === editDraft.tagId)?.name || 'No tag'}
               </div>
             </div>
-            <div className="selected-block-detail">{`Day: ${format(selectedBlock.blockDate, 'EEE, MMM d')}`}</div>
+            <div className="form-group">
+              <label className="form-label">Day</label>
+              <select
+                className="form-select"
+                value={editDraft.dayOfWeek}
+                onChange={(e) => setEditDraft({ ...editDraft, dayOfWeek: parseInt(e.target.value) })}
+              >
+                {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, i) => (
+                  <option key={i} value={i}>{day}</option>
+                ))}
+              </select>
+            </div>
             
             {/* Time Fields - All Three */}
             <div className="form-group" style={{ marginTop: 8 }}>
